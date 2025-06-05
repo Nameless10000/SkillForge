@@ -1,0 +1,6 @@
+@SkillForge.Talks_HostAddress = http://localhost:5206
+
+GET {{SkillForge.Talks_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

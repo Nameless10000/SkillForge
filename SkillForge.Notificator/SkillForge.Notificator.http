@@ -1,0 +1,6 @@
+@SkillForge.Notificator_HostAddress = http://localhost:5197
+
+GET {{SkillForge.Notificator_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

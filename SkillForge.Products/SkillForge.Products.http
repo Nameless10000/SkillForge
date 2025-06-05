@@ -1,0 +1,6 @@
+@SkillForge.Products_HostAddress = http://localhost:5187
+
+GET {{SkillForge.Products_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

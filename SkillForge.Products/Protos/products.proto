@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Products.Grpc";
+
+package products;
+
+service ProductsService {
+    rpc AddProduct (AddProductRequest) returns (AddProductResponse);
+    rpc DeleteProduct (DeleteProductRequest) returns (DeleteProductResponse);
+    rpc ChangeProductPrice (ChangePriceRequest) returns (ChangePriceResponse);
+    rpc GetProduct (GetProductRequest) returns (GetProductResponse);
+    rpc GetProductsBySeller (GetProductsBySellerRequest) returns (GetProductsBySellerResponse);
+}
+
+message GetProductsBySellerRequest {
+    int32 sellerID = 1;
+    int32 offset = 2;
+    int32 count = 3;
+}
+
+message GetProductsBySellerResponse {
+    repeated GrpcProduct products = 1;
+    int32 total = 2;
+    int32 count = 3;
+}
+
+message GrpcSeller {
+    int32 ID = 1;
+    string username = 2;
+    string email = 3;
+}
+
+message GrpcProduct {
+    int32 ID = 1;
+    string title = 2;
+    string description = 3;
+    int32 sellerID = 4;
+    GrpcSeller seller = 5;
+    float price = 6;
+    google.protobuf.Timestamp createdAt = 7;
+    google.protobuf.Timestamp updatedAt = 8;
+}
+
+message GetProductRequest {
+    int32 productID = 1;
+}
+
+message GetProductResponse {
+    GrpcProduct product = 1;
+}
+
+message ChangePriceRequest {
+    int32 productID = 1;
+    float newPrice = 2;
+}
+
+message ChangePriceResponse {
+    bool priceChanged = 1;
+    float newPrice = 2;
+    float oldPrice = 3;
+}
+
+message AddProductRequest {
+    string title = 1;
+    string description = 2;
+    float price = 3;
+}
+
+message AddProductResponse {
+    bool isAdded = 1;
+    int32 productID = 2;
+}
+
+message DeleteProductRequest {
+    int32 productID = 1;
+}
+
+message DeleteProductResponse {
+    bool isDeleted = 1;
+}

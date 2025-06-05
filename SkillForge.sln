@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkillForge.Api", "SkillForge.Api\SkillForge.Api.csproj", "{17DD659A-EBC8-4FD7-BC85-273E62B5FA06}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkillForge.Auth", "SkillForge.Auth\SkillForge.Auth.csproj", "{B71C5D84-A1A1-4C7D-BBA6-8A1428E86C89}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkillForge.Data", "SkillForge.Data\SkillForge.Data.csproj", "{E4190D47-D9BE-4B5C-929D-F6B559BD1E7C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkillForge.Products", "SkillForge.Products\SkillForge.Products.csproj", "{E5C4E834-9700-47AA-B7C0-DD6FB51BCD5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkillForge.Notificator", "SkillForge.Notificator\SkillForge.Notificator.csproj", "{8DF9A15C-9DB7-4BCD-A0AF-6418E754D27D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkillForge.Talks", "SkillForge.Talks\SkillForge.Talks.csproj", "{1F02F357-70C2-4E0E-BBA7-BBCDE235745E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{17DD659A-EBC8-4FD7-BC85-273E62B5FA06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17DD659A-EBC8-4FD7-BC85-273E62B5FA06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17DD659A-EBC8-4FD7-BC85-273E62B5FA06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17DD659A-EBC8-4FD7-BC85-273E62B5FA06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5F84803-3C49-4DB8-8CE8-F70C22CACED3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5F84803-3C49-4DB8-8CE8-F70C22CACED3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5F84803-3C49-4DB8-8CE8-F70C22CACED3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5F84803-3C49-4DB8-8CE8-F70C22CACED3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B71C5D84-A1A1-4C7D-BBA6-8A1428E86C89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B71C5D84-A1A1-4C7D-BBA6-8A1428E86C89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B71C5D84-A1A1-4C7D-BBA6-8A1428E86C89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B71C5D84-A1A1-4C7D-BBA6-8A1428E86C89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4190D47-D9BE-4B5C-929D-F6B559BD1E7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4190D47-D9BE-4B5C-929D-F6B559BD1E7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4190D47-D9BE-4B5C-929D-F6B559BD1E7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4190D47-D9BE-4B5C-929D-F6B559BD1E7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5C4E834-9700-47AA-B7C0-DD6FB51BCD5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5C4E834-9700-47AA-B7C0-DD6FB51BCD5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5C4E834-9700-47AA-B7C0-DD6FB51BCD5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5C4E834-9700-47AA-B7C0-DD6FB51BCD5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DF9A15C-9DB7-4BCD-A0AF-6418E754D27D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DF9A15C-9DB7-4BCD-A0AF-6418E754D27D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DF9A15C-9DB7-4BCD-A0AF-6418E754D27D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DF9A15C-9DB7-4BCD-A0AF-6418E754D27D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F02F357-70C2-4E0E-BBA7-BBCDE235745E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F02F357-70C2-4E0E-BBA7-BBCDE235745E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F02F357-70C2-4E0E-BBA7-BBCDE235745E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F02F357-70C2-4E0E-BBA7-BBCDE235745E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

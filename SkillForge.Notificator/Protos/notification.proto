@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Notifications.Grpc";
+
+package notification;
+
+service NotificationService {
+    rpc NotifyProductPriceChanged (ProductPriceChangedRequest) returns (ProductPriceChangedResponse);
+    rpc GetUserNotifications (GetUserNotificationsRequest) returns (GetUserNotificationsResponse);
+    rpc SetIsRead (SetIsReadRequest) returns (SetIsReadResponse);
+    rpc SubscribeToProduct (SubscribeToProductRequest) returns (SubscribeToProductResponse);
+    rpc UnsubscribefromProduct (UnsubscribefromProductRequest) returns (UnsubscribefromProductResponse);
+}
+
+message UnsubscribefromProductRequest {
+    int32 productID = 1;
+}
+
+message UnsubscribefromProductResponse {
+    bool unsubscribed = 1;
+}
+
+message SubscribeToProductRequest {
+    int32 productID = 1;
+    float desiredPrice = 2;
+}
+
+message SubscribeToProductResponse {
+    bool subscribed = 1;
+}
+
+message SetIsReadRequest {
+    int32 notificationID = 1;
+}
+
+message SetIsReadResponse {
+    bool isReadSet = 1;
+}
+
+message ProductPriceChangedRequest {
+    int32 productID = 1;
+    float newPrice = 2;
+}
+
+message ProductPriceChangedResponse {
+    int32 notifiedUsersCount = 1;
+}
+
+message GetUserNotificationsRequest {
+    int32 userID = 1;
+}
+
+message GrpcNotification {
+    int32 ID = 1;
+    int32 userID = 2;
+    int32 productID = 3;
+    string message = 4;
+    bool isRead = 5;
+    google.protobuf.Timestamp createdAt = 6;
+}
+
+message GetUserNotificationsResponse {
+    repeated GrpcNotification notofications = 1;
+    int32 notRead = 2;
+}
