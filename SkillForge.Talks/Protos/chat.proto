@@ -7,20 +7,9 @@ option csharp_namespace = "Chat.Grpc";
 package chat;
 
 service ChatService {
-    rpc SendMessage (SendMessageRequest) returns (SendMessageResponse);
     rpc LoadMessages (LoadMessagesRequest) returns (LoadMessagesResponse);
     rpc AddToChat (AddToChatRequest) returns (AddToChatResponse);
     rpc QuitChat (QuitChatRequest) returns (QuitChatResponse);
-}
-
-message SendMessageRequest {
-    string message = 1;
-    int32 sessionID = 2;
-}
-
-message SendMessageResponse {
-    bool sent = 1;
-    string errorMessage = 2;
 }
 
 message LoadMessagesRequest {

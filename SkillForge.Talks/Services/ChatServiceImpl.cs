@@ -70,6 +70,8 @@ public class ChatServiceImpl(
 
         var members = await appDbService.GetChatMembersAsync(request.SessionID);
 
+        chatMessage.Sender = null;
+
         // call SignalR
         await hubContext.Clients
             .Users(
