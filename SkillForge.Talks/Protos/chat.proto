@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Chat.Grpc";
+
+package chat;
+
+service ChatService {
+    rpc SendMessage (SendMessageRequest) returns (SendMessageResponse);
+    rpc LoadMessages (LoadMessagesRequest) returns (LoadMessagesResponse);
+    rpc AddToChat (AddToChatRequest) returns (AddToChatResponse);
+    rpc QuitChat (QuitChatRequest) returns (QuitChatResponse);
+}
+
+message SendMessageRequest {
+    string message = 1;
+    int32 sessionID = 2;
+}
+
+message SendMessageResponse {
+    bool sent = 1;
+    string errorMessage = 2;
+}
+
+message LoadMessagesRequest {
+    int32 sessionID = 1;
+}
+
+message LoadMessagesResponse {
+    repeated GrpcChatMessage messages = 1;
+    int32 unreadCount = 2;
+}
+
+message GrpcChatMessage {
+    int32 ID = 1;
+    int32 sessionID = 2;
+    int32 sellerID = 3;
+    string message = 4;
+    google.protobuf.Timestamp sentAt = 5;
+}
+
+message AddToChatRequest {
+    int32 sellerID = 1;
+    int32 productID = 2;
+}
+
+message AddToChatResponse {
+    bool added = 1;
+    bool alreadyAdded = 2;
+}
+
+message QuitChatRequest {
+    int32 sessionID = 1;
+}
+
+message QuitChatResponse {
+    bool quited = 1;
+}

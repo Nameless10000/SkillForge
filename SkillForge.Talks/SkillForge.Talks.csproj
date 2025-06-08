@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Automapper" Version="14.0.0" />
     <PackageReference Include="Google.Protobuf" Version="3.31.1" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.71.0" />
     <PackageReference Include="Grpc.Tools" Version="2.72.0">
@@ -16,6 +17,14 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SkillForge.Data\SkillForge.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include=".\Protos\chat.proto" GrpcServices="Server" />
   </ItemGroup>
 
 </Project>

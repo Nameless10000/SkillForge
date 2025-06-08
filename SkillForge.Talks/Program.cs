@@ -1,41 +1,84 @@
+using System.Text;
+using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using SkillForge.Data;
+using SkillForge.Talks.Services;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+// Add services to the container
+
+var envPath = Environment.CurrentDirectory;
+builder.Configuration.AddJsonFile(@$"{envPath}/../SkillForge.Auth/appsettings.Jwt.json");
+
+var mapper = new MapperConfiguration(opt => opt.AddProfile<MapperProfile>()).CreateMapper();
+builder.Services.AddSingleton(mapper);
+
+builder.Services.AddGrpc();
+builder.Services.AddSignalR();
+
+builder.Services.AddCors();
+
+builder.Services.AddDbContext<AppDbContext>();
+builder.Services.AddTransient<AppDbService>();
+
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new()
+        {
+            ValidateAudience = true,
+            ValidateIssuer = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration.GetValue<string>("Jwt:Issuer"),
+            ValidAudience = builder.Configuration.GetValue<string>("Jwt:Audience"),
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(
+                    builder.Configuration.GetValue<string>("Jwt:SecretKey")!
+                    )
+            )
+        };
+
+        // 👇 Это важно для SignalR: вытаскивает токен из query string
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var accessToken = context.Request.Query["access_token"];
+
+                var path = context.HttpContext.Request.Path;
+                if (!string.IsNullOrEmpty(accessToken) &&
+                    path.StartsWithSegments("/chatHub"))
+                {
+                    context.Token = accessToken;
+                }
+
+                return Task.CompletedTask;
+            }
+        };
+    });
+
+
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+
+app.UseCors(opt => 
+    opt.WithOrigins("localhost:8000", "localhost:8080")
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials()
+        );
+
+app.MapHub<ChatHub>("/chatHub");
+app.MapGrpcService<ChatServiceImpl>();
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
-
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

@@ -13,6 +13,91 @@ namespace SkillForge.Data;
 public class AppDbService(AppDbContext appDbContext)
 {
     // methods to access & manipulate data
+    #region Chats
+
+    public async Task<List<User>> GetChatMembersAsync(int sessionID)
+    {
+        return await appDbContext.ChatSessions
+            .Include(x => x.Buyer)
+            .Where(x => x.ID == sessionID)
+            .Select(x => x.Buyer)
+            .ToListAsync();
+    }
+
+    public async Task<(bool Added, bool AlreadyIn)> AddToChatAsync(
+        int sellerID,
+        int productID,
+        int userID
+    )
+    {
+        var session = await appDbContext.ChatSessions
+            .FirstOrDefaultAsync(x => x.BuyerID == userID
+                && x.SellerID == sellerID
+                && x.ProductID == productID);
+
+        if (session != null)
+            return (false, true);
+
+        session = new ChatSession
+        {
+            SellerID = sellerID,
+            ProductID = productID,
+            BuyerID = userID,
+            StartedAt = DateTime.Now.ToUniversalTime()
+        };
+
+        await appDbContext.ChatSessions.AddAsync(session);
+        await appDbContext.SaveChangesAsync();
+
+        return (true, false);
+    }
+
+    public async Task<List<ChatMessage>> GetSessionMessagesAsync(int sessionID)
+    {
+        return await appDbContext.ChatMessages
+            .Where(x => x.SessionID == sessionID)
+            .ToListAsync();
+    }
+
+    public async Task<bool> QuitChatAsync(int sessionID)
+    {
+        var session = await appDbContext.ChatSessions
+            .FirstOrDefaultAsync(x => x.ID == sessionID);
+
+        if (session == null)
+            return false;
+
+        appDbContext.ChatSessions.Remove(session);
+        await appDbContext.SaveChangesAsync();
+
+        return true;
+    }
+
+    public async Task<ChatMessage?> AddMessageAsync(
+        int sessionID,
+        int senderID,
+        string message
+    )
+    {
+        if (string.IsNullOrWhiteSpace(message))
+            return null;
+
+        var chatMessage = new ChatMessage
+        {
+            SessionID = sessionID,
+            SenderID = senderID,
+            Message = message,
+            SentAt = DateTime.Now.ToUniversalTime()
+        };
+
+        await appDbContext.ChatMessages.AddAsync(chatMessage);
+        await appDbContext.SaveChangesAsync();
+
+        return chatMessage;
+    }
+
+    #endregion
+
     #region User
 
     private SHA256 hasher => SHA256.Create();
