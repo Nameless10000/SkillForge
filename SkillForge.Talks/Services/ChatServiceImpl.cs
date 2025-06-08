@@ -2,11 +2,13 @@ using System.Security.Claims;
 using AutoMapper;
 using Chat.Grpc;
 using Grpc.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using SkillForge.Data;
 
 namespace SkillForge.Talks.Services;
 
+[Authorize]
 public class ChatServiceImpl(
     AppDbService appDbService,
     IHttpContextAccessor httpContextAccessor,
@@ -19,7 +21,6 @@ public class ChatServiceImpl(
     public override async Task<AddToChatResponse> AddToChat(AddToChatRequest request, ServerCallContext context)
     {
         var result = await appDbService.AddToChatAsync(
-            request.SellerID,
             request.ProductID,
             _userID
             );
@@ -54,34 +55,34 @@ public class ChatServiceImpl(
         };
     }
 
-    public override async Task<SendMessageResponse> SendMessage(SendMessageRequest request, ServerCallContext context)
-    {
-        var chatMessage = await appDbService.AddMessageAsync(
-            request.SessionID,
-            _userID,
-            request.Message
-            );
+    // public override async Task<SendMessageResponse> SendMessage(SendMessageRequest request, ServerCallContext context)
+    // {
+    //     var chatMessage = await appDbService.AddMessageAsync(
+    //         request.SessionID,
+    //         _userID,
+    //         request.Message
+    //         );
 
-        if (chatMessage == null)
-            return new()
-            {
-                Sent = false
-            };
+    //     if (chatMessage == null)
+    //         return new()
+    //         {
+    //             Sent = false
+    //         };
 
-        var members = await appDbService.GetChatMembersAsync(request.SessionID);
+    //     var members = await appDbService.GetChatMembersAsync(request.SessionID);
 
-        chatMessage.Sender = null;
+    //     chatMessage.Sender = null;
 
-        // call SignalR
-        await hubContext.Clients
-            .Users(
-                members.Select(x => x.ID.ToString())
-            )
-            .SendAsync("newMessage", chatMessage);
+    //     // call SignalR
+    //     await hubContext.Clients
+    //         .Users(
+    //             members.Select(x => x.ID.ToString())
+    //         )
+    //         .SendAsync("newMessage", chatMessage);
 
-        return new SendMessageResponse
-        {
-            Sent = true
-        };
-    }
+    //     return new SendMessageResponse
+    //     {
+    //         Sent = true
+    //     };
+    // }
 }

@@ -7,4 +7,6 @@ public class ServicesUrls
     public string Products { get; set; }
 
     public string Notifications { get; set; }
+
+    public string Talks { get; set; }
 }

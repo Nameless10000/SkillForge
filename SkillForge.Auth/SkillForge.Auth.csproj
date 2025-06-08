@@ -22,9 +22,9 @@
     </PackageReference>
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.11.0" />
   </ItemGroup>
-  <ItemGroup>
+  <!-- <ItemGroup>
     <Protobuf Include="Protos/auth.proto" GrpcServices="Server" />
-  </ItemGroup>
+  </ItemGroup> -->
   <ItemGroup>
     <ProjectReference Include="..\SkillForge.Data\SkillForge.Data.csproj" />
   </ItemGroup>

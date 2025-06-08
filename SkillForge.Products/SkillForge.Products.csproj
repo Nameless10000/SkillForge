@@ -22,9 +22,4 @@
     <ProjectReference Include="..\SkillForge.Data\SkillForge.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Protobuf Include="Protos/products.proto" GrpcServices="Server" />
-    <Protobuf Include="../SkillForge.Notificator/Protos/notification.proto" GrpcServices="Client" />
-  </ItemGroup>
-
 </Project>

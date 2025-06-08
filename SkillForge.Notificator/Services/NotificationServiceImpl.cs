@@ -51,7 +51,8 @@ public class NotificationServiceImpl(
 
         _ = await appDbService.SetWatchlistNotified(watchlist);
 
-        return new() {
+        return new()
+        {
             NotifiedUsersCount = watchlist.Count
         };
     }
@@ -60,7 +61,8 @@ public class NotificationServiceImpl(
     {
         var res = await appDbService.SetIsReadToNotificationAsync(request.NotificationID);
 
-        return new() {
+        return new()
+        {
             IsReadSet = res
         };
     }
@@ -69,7 +71,8 @@ public class NotificationServiceImpl(
     {
         var res = await appDbService.SubscribeToProductAsync(_userID, request.ProductID, (decimal)request.DesiredPrice);
 
-        return new() {
+        return new()
+        {
             Subscribed = res
         };
     }
@@ -78,7 +81,8 @@ public class NotificationServiceImpl(
     {
         var res = await appDbService.UnsubscribeFromProductAsync(_userID, request.ProductID);
 
-        return new() {
+        return new()
+        {
             Unsubscribed = res
         };
     }

@@ -23,8 +23,4 @@
     <ProjectReference Include="..\SkillForge.Data\SkillForge.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Protobuf Include=".\Protos\chat.proto" GrpcServices="Server" />
-  </ItemGroup>
-
 </Project>

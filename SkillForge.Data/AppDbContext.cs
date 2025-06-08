@@ -17,10 +17,10 @@ public class AppDbContext() : DbContext()
     public DbSet<ChatMessage> ChatMessages { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {        
-        optionsBuilder.UseNpgsql("User ID=postgres;Password=2174583;Host=localhost;Port=5432;Database=WebShop;Pooling=true;", 
+    {
+        optionsBuilder.UseNpgsql("User ID=postgres;Password=2174583;Host=localhost;Port=5432;Database=WebShop;Pooling=true;",
             npgsqlOptions => npgsqlOptions.EnableRetryOnFailure());
-            
+
         // Устанавливаем глобальную настройку для DateTime
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
     }

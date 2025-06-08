@@ -5,7 +5,8 @@ using SkillForge.Data.Entities;
 
 namespace SkillForge.Talks.Services;
 
-public class MapperProfile : Profile {
+public class MapperProfile : Profile
+{
     public MapperProfile()
     {
         CreateMap<ChatMessage, GrpcChatMessage>()

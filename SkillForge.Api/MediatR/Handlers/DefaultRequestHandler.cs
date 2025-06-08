@@ -5,7 +5,8 @@ namespace SkillForge.Api.MediatR.Handlers;
 
 public abstract class RequestHandlerBase(
     IHttpContextAccessor contextAccessor
-) {
+)
+{
 
     protected string _authToken => contextAccessor.HttpContext!.Request.Headers.Authorization!;
 

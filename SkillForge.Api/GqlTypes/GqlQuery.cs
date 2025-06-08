@@ -7,6 +7,7 @@ using SkillForge.Api.Models.Users;
 using SkillForge.Api.Models.Products;
 using SkillForge.Data.Entities;
 using SkillForge.Api.MediatR.Commands;
+using SkillForge.Api.Models.Chats;
 
 namespace SkillForge.Api.GqlTypes
 {
@@ -27,6 +28,12 @@ namespace SkillForge.Api.GqlTypes
         public async Task<List<Product>> GetProductsBySeller(GetProductsBySeller getProductsBySeller, [Service] IMediator mediator)
         {
             return await mediator.Send(new GetProductsBySellerReq(getProductsBySeller));
+        }
+
+        [Authorize]
+        public async Task<LoadMessagesResp> LoadMessages(LoadMessages loadMessages, [Service] IMediator mediator)
+        {
+            return await mediator.Send(new LoadMessagesReq(loadMessages));
         }
     }
 }

@@ -24,15 +24,18 @@ public class ProductsServiceImpl(
         System.Console.WriteLine(request.ProductID);
         System.Console.WriteLine(request);
         var product = await appDbService.GetProductAsync(request.ProductID);
-        
+
         if (product == null)
-            return new() {
-                Product = new() {
+            return new()
+            {
+                Product = new()
+                {
                     Seller = new()
                 }
             };
 
-        return new() {
+        return new()
+        {
             Product = mapper.Map<GrpcProduct>(product)
         };
     }
@@ -47,7 +50,8 @@ public class ProductsServiceImpl(
 
     public override async Task<DeleteProductResponse> DeleteProduct(DeleteProductRequest request, ServerCallContext context)
     {
-        return new() {
+        return new()
+        {
             IsDeleted = await appDbService.DeleteProductAsync(request.ProductID, _userID)
         };
     }
@@ -58,7 +62,8 @@ public class ProductsServiceImpl(
         newProduct.SellerID = _userID;
         await appDbService.AddNewProductAsync(newProduct);
 
-        return new() {
+        return new()
+        {
             IsAdded = true,
             ProductID = newProduct.ID
         };
@@ -68,7 +73,8 @@ public class ProductsServiceImpl(
     {
         var product = await appDbService.GetProductAsync(request.ProductID);
         if (product == null)
-            return new() {
+            return new()
+            {
                 PriceChanged = false,
                 NewPrice = 0,
                 OldPrice = 0
@@ -78,7 +84,8 @@ public class ProductsServiceImpl(
 
         var changedProduct = await appDbService.ChangeProductPriceAsync(product, oldPrice, _userID);
         if (changedProduct == null)
-            return new() {
+            return new()
+            {
                 PriceChanged = false,
                 NewPrice = 0,
                 OldPrice = 0
@@ -88,7 +95,8 @@ public class ProductsServiceImpl(
         {
             { "Authorization", _token }
         };
-        var response = await notificationClient.NotifyProductPriceChangedAsync(new ProductPriceChangedRequest{
+        var response = await notificationClient.NotifyProductPriceChangedAsync(new ProductPriceChangedRequest
+        {
             ProductID = request.ProductID,
             NewPrice = request.NewPrice
         },
@@ -96,7 +104,8 @@ public class ProductsServiceImpl(
 
         System.Console.WriteLine($"{response.NotifiedUsersCount} users were interested in {request.ProductID} product");
 
-        return new() {
+        return new()
+        {
             PriceChanged = true,
             OldPrice = (float)oldPrice,
             NewPrice = (float)changedProduct.Price,

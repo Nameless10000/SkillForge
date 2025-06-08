@@ -25,18 +25,21 @@ public class AppDbService(AppDbContext appDbContext)
     }
 
     public async Task<(bool Added, bool AlreadyIn)> AddToChatAsync(
-        int sellerID,
         int productID,
         int userID
     )
     {
         var session = await appDbContext.ChatSessions
             .FirstOrDefaultAsync(x => x.BuyerID == userID
-                && x.SellerID == sellerID
                 && x.ProductID == productID);
 
         if (session != null)
             return (false, true);
+
+        var sellerID = await appDbContext.Products
+            .Where(x => x.ID == productID)
+            .Select(x => x.SellerID)
+            .FirstOrDefaultAsync();
 
         session = new ChatSession
         {

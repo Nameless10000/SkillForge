@@ -26,7 +26,8 @@ builder.Services.Configure<ServicesUrls>(
     builder.Configuration.GetSection("ServicesUrls")
 );
 
-builder.Services.AddTransient(opt => {
+builder.Services.AddTransient(opt =>
+{
     var notificationUrl = opt
         .GetRequiredService<IOptions<ServicesUrls>>()
         .Value
@@ -66,10 +67,10 @@ builder.Services.AddAuthorization(options =>
 {
     // options.AddPolicy("RequireAdminRole", policy =>
     //     policy.RequireRole("Admin"));
-        
+
     // options.AddPolicy("RequireUserRole", policy =>
     //     policy.RequireRole("User"));
-        
+
     options.AddPolicy("RequireAuthenticatedUser", policy =>
         policy.RequireAuthenticatedUser());
 });

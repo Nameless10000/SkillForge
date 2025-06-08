@@ -21,7 +21,7 @@ public class SubscribeUserRequestHandler(
         var result = await client.SubscribeToProductAsync(
             mapper.Map<SubscribeToProductRequest>(request.SubcribeUser),
             meta,
-            cancellationToken: cancellationToken 
+            cancellationToken: cancellationToken
         );
 
         return result.Subscribed;

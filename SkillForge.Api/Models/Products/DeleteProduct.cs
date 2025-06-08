@@ -8,6 +8,7 @@ public class DeleteProduct
     public int ProductID { get; set; }
 }
 
-public class DeleteProductResp {
+public class DeleteProductResp
+{
     public bool IsDeleted { get; set; }
 }

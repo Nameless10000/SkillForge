@@ -11,6 +11,7 @@ using Auth.Grpc;
 using Products.Grpc;
 using Notifications.Grpc;
 using SkillForge.Data.Infrastructure;
+using Chat.Grpc;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -48,6 +49,12 @@ builder.Services.AddTransient(opt =>
     var servicesUrlsOpts = opt.GetRequiredService<IOptions<ServicesUrls>>();
     var notifiationChannel = GrpcChannel.ForAddress(servicesUrlsOpts.Value.Notifications);
     return new NotificationService.NotificationServiceClient(notifiationChannel);
+});
+builder.Services.AddTransient(opt =>
+{
+    var servicesUrlsOpts = opt.GetRequiredService<IOptions<ServicesUrls>>();
+    var chatChannel = GrpcChannel.ForAddress(servicesUrlsOpts.Value.Talks);
+    return new ChatService.ChatServiceClient(chatChannel);
 });
 
 builder.Services.AddDbContext<AppDbContext>();

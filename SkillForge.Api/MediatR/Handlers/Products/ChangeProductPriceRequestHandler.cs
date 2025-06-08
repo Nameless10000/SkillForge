@@ -10,7 +10,7 @@ namespace SkillForge.Api.MediatR.Handlers.Products;
 public class ChangeProductPriceRequestHandler(
     ProductsService.ProductsServiceClient client,
     IMapper mapper,
-    IHttpContextAccessor httpContextAccessor) : RequestHandlerBase(httpContextAccessor), 
+    IHttpContextAccessor httpContextAccessor) : RequestHandlerBase(httpContextAccessor),
                                                 IRequestHandler<ChangeProductPriceReq, ChangeProductPriceResp>
 {
     public async Task<ChangeProductPriceResp> Handle(ChangeProductPriceReq request, CancellationToken cancellationToken)

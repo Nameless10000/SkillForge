@@ -24,13 +24,12 @@ message LoadMessagesResponse {
 message GrpcChatMessage {
     int32 ID = 1;
     int32 sessionID = 2;
-    int32 sellerID = 3;
+    int32 senderID = 3;
     string message = 4;
     google.protobuf.Timestamp sentAt = 5;
 }
 
 message AddToChatRequest {
-    int32 sellerID = 1;
     int32 productID = 2;
 }
 

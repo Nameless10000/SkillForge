@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace SkillForge.Api.Models.Products;
+namespace SkillForge.Api.Models.Chats;
 
-public class GetProduct
+public class AddToChat
 {
     [Required]
     public int ProductID { get; set; }

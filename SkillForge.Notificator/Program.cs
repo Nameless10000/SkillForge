@@ -68,7 +68,8 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
-app.UseCors(opt => {
+app.UseCors(opt =>
+{
     opt.AllowAnyHeader()
         .WithOrigins("http://localhost:8000", "http://localhost:8080")
         .AllowAnyHeader()

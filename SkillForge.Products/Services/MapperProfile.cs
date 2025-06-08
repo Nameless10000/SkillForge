@@ -5,7 +5,8 @@ using Google.Protobuf.WellKnownTypes;
 
 namespace SkillForge.Products.Services;
 
-public class MapperProfile : Profile {
+public class MapperProfile : Profile
+{
     public MapperProfile()
     {
         CreateMap<AddProductRequest, Product>()

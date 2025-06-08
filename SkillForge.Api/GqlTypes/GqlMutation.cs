@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SkillForge.Api.MediatR.Commands;
 using SkillForge.Api.MediatR.Models;
+using SkillForge.Api.Models.Chats;
 using SkillForge.Api.Models.Notifications;
 using SkillForge.Api.Models.Products;
 using SkillForge.Api.Models.Users;
@@ -52,19 +53,35 @@ namespace SkillForge.Api.GqlTypes
         [Authorize]
         public async Task<bool> SubscribeUserToProduct(SubscribeUser subscribeUser, [Service] IMediator mediator)
         {
-            return await mediator.Send(new SubscribeUserReq(subscribeUser)); 
+            return await mediator.Send(new SubscribeUserReq(subscribeUser));
         }
 
         [Authorize]
         public async Task<bool> UnsubscribeUserToProduct(UnsubscribeUser unsubscribeUser, [Service] IMediator mediator)
         {
-            return await mediator.Send(new UnsubscribeUserReq(unsubscribeUser)); 
+            return await mediator.Send(new UnsubscribeUserReq(unsubscribeUser));
         }
 
         [Authorize]
         public async Task<bool> MarkNotificationRead(SetIsRead setIsRead, [Service] IMediator mediator)
         {
-            return await mediator.Send(new SetIsReadReq(setIsRead)); 
+            return await mediator.Send(new SetIsReadReq(setIsRead));
+        }
+
+        #endregion
+
+        #region Chats
+
+        [Authorize]
+        public async Task<bool> AddToChat(AddToChat addToChat, [Service] IMediator mediator)
+        {
+            return await mediator.Send(new AddToChatReq(addToChat));
+        }
+
+        [Authorize]
+        public async Task<bool> QuitChat(QuitChat quitChat, [Service] IMediator mediator)
+        {
+            return await mediator.Send(new QuitChatReq(quitChat));
         }
 
         #endregion

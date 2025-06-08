@@ -10,7 +10,7 @@ namespace SkillForge.Api.MediatR.Handlers.Products;
 public class DeleteProductRequestHandler(
     ProductsService.ProductsServiceClient client,
     IMapper mapper,
-    IHttpContextAccessor httpContextAccessor) : RequestHandlerBase(httpContextAccessor), 
+    IHttpContextAccessor httpContextAccessor) : RequestHandlerBase(httpContextAccessor),
                                                 IRequestHandler<DeleteProductReq, DeleteProductResp>
 {
     public async Task<DeleteProductResp> Handle(DeleteProductReq request, CancellationToken cancellationToken)

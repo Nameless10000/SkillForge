@@ -2,7 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SkillForge.Api.Models.Products;
 
-public class GetProductsBySeller {
+public class GetProductsBySeller
+{
     [Required]
     public int SellerID { get; set; }
 

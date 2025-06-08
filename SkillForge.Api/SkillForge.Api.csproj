@@ -36,12 +36,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="..\SkillForge.Auth\Protos\auth.proto" GrpcServices="Client" />
-    <Protobuf Include="..\SkillForge.Products\Protos\products.proto" GrpcServices="Client" />
-    <Protobuf Include="..\SkillForge.Notificator\Protos\notification.proto" GrpcServices="Client" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\SkillForge.Data\SkillForge.Data.csproj" />
   </ItemGroup>
 

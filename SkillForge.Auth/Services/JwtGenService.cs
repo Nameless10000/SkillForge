@@ -13,7 +13,8 @@ public class JwtGenService(IConfiguration configuration)
     private string _issuer => configuration["Jwt:Issuer"];
     private string _audience => configuration["Jwt:Audience"];
 
-    public string GenerateToken(User user){
+    public string GenerateToken(User user)
+    {
         var claims = GetClaimList(user);
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_key));
@@ -30,7 +31,8 @@ public class JwtGenService(IConfiguration configuration)
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    private List<Claim> GetClaimList(User user){
+    private List<Claim> GetClaimList(User user)
+    {
         return [
             new Claim(ClaimTypes.NameIdentifier, user.ID.ToString()),
             new Claim(ClaimTypes.Name, user.Username),

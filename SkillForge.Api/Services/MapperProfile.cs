@@ -1,7 +1,9 @@
 ﻿using Auth.Grpc;
 using AutoMapper;
+using Chat.Grpc;
 using Notifications.Grpc;
 using Products.Grpc;
+using SkillForge.Api.Models.Chats;
 using SkillForge.Api.Models.Notifications;
 using SkillForge.Api.Models.Products;
 using SkillForge.Api.Models.Users;
@@ -30,7 +32,7 @@ namespace SkillForge.Api.Services
 
             CreateMap<AddProductResponse, AddProductResp>();
             CreateMap<AddProduct, AddProductRequest>();
-            
+
             CreateMap<DeleteProductResponse, DeleteProductResp>();
             CreateMap<DeleteProduct, DeleteProductRequest>();
 
@@ -46,6 +48,15 @@ namespace SkillForge.Api.Services
             CreateMap<UnsubscribeUser, UnsubscribefromProductRequest>();
 
             CreateMap<SetIsRead, SetIsReadRequest>();
+
+            #endregion
+
+            #region Chats
+
+            CreateMap<LoadMessages, LoadMessagesRequest>();
+            CreateMap<LoadMessagesResponse, LoadMessagesResp>();
+            CreateMap<GrpcChatMessage, ChatMessage>()
+                .ForMember(x => x.SentAt, opt => opt.MapFrom(x => x.SentAt.ToDateTime()));
 
             #endregion
         }
