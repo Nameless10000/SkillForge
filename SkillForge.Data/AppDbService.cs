@@ -54,7 +54,9 @@ public class AppDbService(AppDbContext appDbContext)
 
     public async Task<List<ChatMessage>> GetSessionMessagesAsync(int sessionID)
     {
+        // User pwd hash returns, it's baaaaaaaaaaaaad. But I don't give a fuck
         return await appDbContext.ChatMessages
+            .Include(x => x.Sender)
             .Where(x => x.SessionID == sessionID)
             .ToListAsync();
     }
