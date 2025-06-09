@@ -25,6 +25,8 @@ builder.Configuration.AddJsonFile(@$"{envPath}/../SkillForge.Data/appsettings.Ur
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 //builder.Services.AddOpenApi();
 
+builder.Services.AddCors();
+
 var mapper = new MapperConfiguration(x => x.AddProfile<MapperProfile>()).CreateMapper();
 builder.Services.AddSingleton(mapper);
 
@@ -94,6 +96,13 @@ builder.Services.AddGraphQLServer()
     .AddAuthorization();
 
 var app = builder.Build();
+
+app.UseCors(opt => opt
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+    .WithOrigins("http://localhost:8001")
+    .AllowCredentials()
+    );
 
 app.UseHttpsRedirection();
 app.UseRouting();
