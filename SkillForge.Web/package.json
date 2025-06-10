@@ -16,7 +16,8 @@
     "@microsoft/signalr": "^8.0.7",
     "@umijs/max": "^4.4.11",
     "antd": "^5.4.0",
-    "dayjs": "^1.11.13"
+    "dayjs": "^1.11.13",
+    "jwt-decode": "^4.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.33",

@@ -7,7 +7,14 @@ export default (initialState: AccessUserInfo) => {
     initialState && initialState.role && initialState.role === "admin"
   );
 
+  const canSeeUser = !!(initialState 
+    && initialState.username 
+    && initialState.username !== "Unknown");
+
+  //console.log({canSeeUser})
+
   return {
     canSeeAdmin,
+    canSeeUser
   };
 };

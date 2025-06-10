@@ -19,7 +19,8 @@ export default defineConfig({
     }
   },
   layout: {
-    title: '@umijs/max',
+    title: 'Web-Shop',
+    
   },
   routes: [
     {
@@ -27,10 +28,13 @@ export default defineConfig({
       redirect: '/login',
     },
     {
-      name: '首页',
       path: '/login',
       component: './Login',
       layout: false
+    },
+    {
+      path: "/profile",
+      component: "./Profile",
     },
   ],
   npmClient: 'npm',

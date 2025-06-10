@@ -1,9 +1,10 @@
 import { API } from '@/constants';
 import { LoginFormPage, ProFormText } from '@ant-design/pro-components';
-import { request } from '@umijs/max';
-import { Tabs, TabsProps } from 'antd';
+import { history, request } from '@umijs/max';
+import { message, Tabs, TabsProps } from 'antd';
 import TabPane from 'antd/es/tabs/TabPane';
-import { AuthedUser, UserLogin } from 'typings';
+import { useState } from 'react';
+import { AuthedUser, UserLogin, UserReg } from 'typings';
 
 const pageTabs: TabsProps['items'] = [
   {
@@ -94,9 +95,8 @@ const pageTabs: TabsProps['items'] = [
   }
 ]
 
-export default () => {
-  const onFormFinish = async (data: UserLogin) => {
-    const query = `query {
+const createLoginQuery = (data: UserLogin): string => {
+  return `query {
       loginUser (userLogin:  {
          password: "${data.password}",
          username: "${data.username}"
@@ -104,24 +104,52 @@ export default () => {
         accessToken  
       }
     }`;
+} 
 
-    //console.log(query)
+const createRegQuery = (data: UserReg): string => {
+  return `mutation {
+      registerUser (userRegisterer:  {
+         password: "${data.password}",
+         username: "${data.username}",
+         email: "${data.email}"
+      }) {
+        accessToken  
+      }
+    }`;
+} 
+
+export default () => {
+
+  const [formMode, setFormMode] = useState<string>("login");
+
+  const onFormFinish = async (data: UserReg) => {
+    const query = formMode == "login" 
+      ? createLoginQuery(data as UserLogin)
+      : createRegQuery(data);
 
     const response: AuthedUser = await request(API, {
-      method: 'POST',
       data: {
-        query: query,
+        query,
       },
     });
 
     //console.log(response.data.loginUser.accessToken);
-    localStorage.setItem('token', response.data.loginUser.accessToken);
+    const helloMessage = response.data.loginUser && response.data.loginUser.accessToken
+      ? "Logged in!"
+      : "Sth went wrong, try again :("
+
+    if (response.data.loginUser && response.data.loginUser.accessToken) {
+      localStorage.setItem('token', response.data.loginUser.accessToken);
+      message.success(helloMessage);
+      history.push("/profile");
+    }
+    else
+      message.error(helloMessage);
   };
 
   return (
-    <LoginFormPage<UserLogin> onFinish={onFormFinish}>
-        <Tabs items={pageTabs}  defaultActiveKey='login'/>
-      
+    <LoginFormPage<UserReg> onFinish={onFormFinish}>
+        <Tabs items={pageTabs}  defaultActiveKey='login' onChange={setFormMode}/>
     </LoginFormPage>
   );
 };
