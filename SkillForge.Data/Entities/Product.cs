@@ -28,4 +28,11 @@ public class Product
     public DateTime CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }
+
+    public int CategoryID { get; set; }
+
+    [ForeignKey(nameof(CategoryID))]
+    public Category Category { get; set; }
+
+    public string? Base64Photo { get; set; }
 }

@@ -22,7 +22,17 @@ public class MapperProfile : Profile
 
         CreateMap<Product, GrpcProduct>()
             .ForMember(x => x.CreatedAt, opt => opt.MapFrom(x => Timestamp.FromDateTime(x.CreatedAt.ToUniversalTime())))
-            .ForMember(x => x.UpdatedAt, opt => opt.Condition(x => x.UpdatedAt != null))
-            .ForMember(x => x.UpdatedAt, opt => opt.MapFrom(x => Timestamp.FromDateTime(x.UpdatedAt!.Value.ToUniversalTime())));
+            .ForMember(x => x.UpdatedAt, opt => opt.MapFrom(x => 
+                    x.UpdatedAt != null
+                        ? Timestamp.FromDateTime(x.UpdatedAt.Value.ToUniversalTime())
+                        : new Timestamp()
+                ));
+
+        CreateMap<Category, GrpcCategory>().ReverseMap();
+
+        CreateMap<OrderItem, GrpcOrderItem>().ReverseMap();
+
+        CreateMap<Order, GrpcOrder>()
+            .ForMember(x => x.CreatedAt, opt => opt.MapFrom(x => Timestamp.FromDateTime(x.CreatedAt.ToUniversalTime())));
     }
 }

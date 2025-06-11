@@ -12,6 +12,9 @@ public class AddProduct
 
     [Required]
     public decimal Price { get; set; }
+
+    [Required]
+    public int CategoryID { get; set; }
 }
 
 public class AddProductResp

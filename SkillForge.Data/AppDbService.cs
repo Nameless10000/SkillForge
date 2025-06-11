@@ -147,6 +147,33 @@ public class AppDbService(AppDbContext appDbContext)
 
     #region Products
 
+    public async Task<List<Category>> GetCategoriesAsync()
+    {
+        return await appDbContext.Categories
+            .ToListAsync();
+    }
+
+    public async Task<bool> DeleteOrderAsync(int orderID, int userID)
+    {
+        var order = await appDbContext.Orders.FirstOrDefaultAsync(x => x.ID == orderID);
+
+        if (order == null || order.UserID != userID)
+            return false;
+
+        appDbContext.Orders.Remove(order);
+        await appDbContext.SaveChangesAsync();
+
+        return true;
+    }
+
+    public async Task<Order> CreateOrderAsync(Order order)
+    {
+        await appDbContext.Orders.AddAsync(order);
+        await appDbContext.SaveChangesAsync();
+
+        return order;
+    }
+
     public async Task<Product> AddNewProductAsync(Product product)
     {
         await appDbContext.Products.AddAsync(product);
@@ -156,7 +183,10 @@ public class AppDbService(AppDbContext appDbContext)
     }
 
     public async Task<Product?> GetProductAsync(int id)
-        => await appDbContext.Products.Include(x => x.Seller).FirstOrDefaultAsync(x => x.ID == id);
+        => await appDbContext.Products
+            .Include(x => x.Seller)
+            .Include(x => x.Category)
+            .FirstOrDefaultAsync(x => x.ID == id);
 
     public async Task<(List<Product> data, int total)> GetProductsBySellerAsync(int sellerID, int offset, int count)
     {
@@ -167,6 +197,20 @@ public class AppDbService(AppDbContext appDbContext)
         return (await appDbContext.Products
             .Include(x => x.Seller)
             .Where(x => x.SellerID == sellerID)
+            .Skip(offset)
+            .Take(count)
+            .ToListAsync(), total);
+    }
+
+    public async Task<(List<Product> data, int total)> GetProductsByCategoryAsync(int categoryID, int offset, int count)
+    {
+
+        var total = await appDbContext.Products
+            .CountAsync(x => x.CategoryID == categoryID);
+
+        return (await appDbContext.Products
+            .Include(x => x.Seller)
+            .Where(x => x.CategoryID == categoryID)
             .Skip(offset)
             .Take(count)
             .ToListAsync(), total);
@@ -204,6 +248,14 @@ public class AppDbService(AppDbContext appDbContext)
         await appDbContext.SaveChangesAsync();
 
         return product;
+    }
+
+    public async Task<List<Order>> GetUserOrdersAsync(int userID)
+    {
+        return await appDbContext.Orders
+            .Include(x => x.OrderItems)
+            .Where(x => x.UserID == userID)
+            .ToListAsync();
     }
 
     #endregion

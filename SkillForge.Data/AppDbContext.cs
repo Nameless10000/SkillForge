@@ -15,6 +15,9 @@ public class AppDbContext() : DbContext()
     public DbSet<ProductReview> ProductsReviews { get; set; }
     public DbSet<ChatSession> ChatSessions { get; set; }
     public DbSet<ChatMessage> ChatMessages { get; set; }
+    public DbSet<Order> Orders {get;set;}
+    public DbSet<OrderItem> OrderItems {get;set;}
+    public DbSet<Category> Categories {get;set;}
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -23,5 +26,14 @@ public class AppDbContext() : DbContext()
 
         // Устанавливаем глобальную настройку для DateTime
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Order>()
+            .HasMany(x => x.OrderItems)
+            .WithOne(x => x.Order);
+
+        base.OnModelCreating(modelBuilder);
     }
 }

@@ -1,6 +1,8 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
 
 option csharp_namespace = "Products.Grpc";
 
@@ -12,6 +14,69 @@ service ProductsService {
     rpc ChangeProductPrice (ChangePriceRequest) returns (ChangePriceResponse);
     rpc GetProduct (GetProductRequest) returns (GetProductResponse);
     rpc GetProductsBySeller (GetProductsBySellerRequest) returns (GetProductsBySellerResponse);
+    rpc GetProductsByCategory (GetProductsByCategoryRequest) returns (GetProductsByCategoryResponse);
+    rpc CreateOrder (CreateOrderRequest) returns (CreateOrderResponse);
+    rpc DeleteOrder (DeleteOrderRequest) returns (DeleteOrderResponse);
+    rpc GetCategories (GetCategoriesRequest) returns (GetCategoriesResponse);
+    rpc GetUserOrders (GetUserOrdersRequest) returns (GetUserOrdersResponse);
+}
+
+message GetUserOrdersRequest {
+    int32 userID = 1;
+}
+
+message GetUserOrdersResponse {
+    repeated GrpcOrder orders = 1;
+}
+
+message GrpcOrder {
+    int32 ID = 1;
+    int32 userID = 2;
+    repeated GrpcOrderItem orderItems = 3;
+    google.protobuf.Timestamp createdAt = 4;
+}
+
+message GetCategoriesRequest {}
+
+message GetCategoriesResponse {
+    repeated GrpcCategory categories = 1;
+}
+
+message GrpcCategory {
+    int32 ID = 1;
+    string name = 2;
+}
+
+message GetProductsByCategoryResponse {
+    repeated GrpcProduct products = 1;
+    int32 count = 2;
+}
+
+message GetProductsByCategoryRequest {
+    int32 categoryID = 1;
+    int32 offset = 2;
+    int32 count = 3;
+}
+
+message DeleteOrderResponse {
+    bool deleted = 1;
+}
+
+message DeleteOrderRequest {
+    int32 orderID = 1;
+}
+
+message CreateOrderResponse {
+    bool created = 1;
+}
+
+message CreateOrderRequest {
+    repeated GrpcOrderItem orderItems = 2;
+}
+
+message GrpcOrderItem {
+    int32 productID = 1;
+    int32 quantity = 2;
 }
 
 message GetProductsBySellerRequest {
@@ -39,8 +104,10 @@ message GrpcProduct {
     int32 sellerID = 4;
     GrpcSeller seller = 5;
     float price = 6;
-    google.protobuf.Timestamp createdAt = 7;
-    google.protobuf.Timestamp updatedAt = 8;
+    int32 categoryID = 7;
+    GrpcCategory category = 8;
+    google.protobuf.Timestamp createdAt = 9;
+    google.protobuf.Timestamp updatedAt = 10;
 }
 
 message GetProductRequest {
@@ -66,6 +133,8 @@ message AddProductRequest {
     string title = 1;
     string description = 2;
     float price = 3;
+    int32 categoryID = 4;
+    string base64Photo = 5;
 }
 
 message AddProductResponse {

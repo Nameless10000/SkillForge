@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Text.Json;
 using AutoMapper;
 using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
@@ -110,5 +111,69 @@ public class ProductsServiceImpl(
             OldPrice = (float)oldPrice,
             NewPrice = (float)changedProduct.Price,
         };
+    }
+
+    public override async Task<CreateOrderResponse> CreateOrder(CreateOrderRequest request, ServerCallContext context)
+    {
+        var order = new Order{
+            UserID = _userID,
+            CreatedAt = DateTime.Now,
+            OrderItems = [.. request.OrderItems.Select(mapper.Map<OrderItem>)]
+        };
+
+        _ = await appDbService.CreateOrderAsync(order);
+
+        return new() {
+            Created = true
+        };
+    }
+
+    public override async Task<GetUserOrdersResponse> GetUserOrders(GetUserOrdersRequest request, ServerCallContext context)
+    {
+        var orders = await appDbService.GetUserOrdersAsync(request.UserID);
+
+        var response = new GetUserOrdersResponse();
+
+        response.Orders.AddRange(orders.Select(mapper.Map<GrpcOrder>));
+
+        return response;
+    }
+
+    public override async Task<DeleteOrderResponse> DeleteOrder(DeleteOrderRequest request, ServerCallContext context)
+    {
+        return new() {
+            Deleted = await appDbService.DeleteOrderAsync(request.OrderID, _userID)
+        };
+    }
+
+    public override async Task<GetProductsByCategoryResponse> GetProductsByCategory(GetProductsByCategoryRequest request, ServerCallContext context)
+    {
+        var products = await appDbService.GetProductsByCategoryAsync(
+                request.CategoryID, 
+                request.Offset,
+                request.Count
+            );
+
+        var response = new GetProductsByCategoryResponse() {
+            Count = products.total
+        };
+
+        response.Products
+            .AddRange(
+                products.data.Select(mapper.Map<GrpcProduct>)
+                );
+
+        return response;
+    }
+
+    public override async Task<GetCategoriesResponse> GetCategories(GetCategoriesRequest request, ServerCallContext context)
+    {
+        var categories = await appDbService.GetCategoriesAsync();
+
+        var response = new GetCategoriesResponse();
+
+        response.Categories.AddRange(categories.Select(mapper.Map<GrpcCategory>));
+
+        return response;
     }
 }
