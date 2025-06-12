@@ -5,6 +5,10 @@ using SkillForge.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 
+builder.WebHost.ConfigureKestrel(opts =>
+    opts.ListenAnyIP(7222, lopts => lopts.UseHttps("/app/https/common.pfx", "2174583"))
+);
+
 var envPath = Environment.CurrentDirectory;
 builder.Configuration.AddJsonFile(@$"{envPath}/appsettings.Jwt.json");
 // Add services to the container.
@@ -18,11 +22,9 @@ builder.Services.AddTransient<JwtGenService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+using var scope = app.Services.CreateScope();
+var database = scope.ServiceProvider.GetRequiredService<AppDbContext>().Database;
+database.Migrate();
 
 app.UseHttpsRedirection();
 

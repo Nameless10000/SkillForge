@@ -21,11 +21,11 @@ public class AppDbContext() : DbContext()
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql("User ID=postgres;Password=2174583;Host=localhost;Port=5432;Database=WebShop;Pooling=true;",
+        optionsBuilder.UseNpgsql("User ID=postgres;Password=2174583;Host=database;Port=5432;Database=WebShop;Pooling=true;",
             npgsqlOptions => npgsqlOptions.EnableRetryOnFailure());
 
         // Устанавливаем глобальную настройку для DateTime
-        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);   
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
