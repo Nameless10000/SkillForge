@@ -16,4 +16,13 @@ public class User
     public string PasswordHash { get; set; }
     //public string? PhoneNumber { get; set; }
     public DateTime CreatedAt { get; set; }
+
+    public UserRoles Role { get; set; }
+}
+
+public enum UserRoles
+{
+    Admin = 1,
+    User,
+    Unauthorized
 }

@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -12,7 +13,20 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 //builder.Services.AddOpenApi();
 var envPath = Environment.CurrentDirectory;
-builder.Configuration.AddJsonFile(@$"{envPath}/../SkillForge.Auth/appsettings.Jwt.json");
+var inDev = builder.Environment.IsDevelopment();
+
+builder.Configuration.AddJsonFile(
+    inDev
+        ? @$"{envPath}/../SkillForge.Data/appsettings.Jwt.json"
+        : "/app/appsettings.Jwt.json");
+
+builder.WebHost.ConfigureKestrel(opts =>
+    opts.ListenAnyIP(7029, lopts => 
+        lopts.UseHttps(inDev 
+            ? "../common.pfx"
+            : "/app/https/common.pfx", "2174583")
+            )
+);
 
 builder.Services.AddGrpc();
 builder.Services.AddSignalR();
@@ -42,7 +56,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 Encoding.UTF8.GetBytes(
                     builder.Configuration.GetValue<string>("Jwt:SecretKey")!
                     )
-            )
+            ),
+            RoleClaimType = ClaimTypes.Role
         };
 
         // 👇 Это важно для SignalR: вытаскивает токен из query string
@@ -80,7 +95,7 @@ app.UseCors(opt =>
 app.UseHttpsRedirection();
 
 app.MapGrpcService<NotificationServiceImpl>();
-app.MapHub<NotificationHub>("/notificationsHub"); // probably /notification
+app.MapHub<NotificationHub>("/notificationsHub");
 
 app.Run();
 

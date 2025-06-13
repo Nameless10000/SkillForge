@@ -12,14 +12,32 @@ using Products.Grpc;
 using Notifications.Grpc;
 using SkillForge.Data.Infrastructure;
 using Chat.Grpc;
+using System.Security.Claims;
+using System.Net.Security;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var envPath = Environment.CurrentDirectory;
-builder.Configuration.AddJsonFile(@$"{envPath}/../SkillForge.Auth/appsettings.Jwt.json");
-builder.Configuration.AddJsonFile(@$"{envPath}/../SkillForge.Data/appsettings.Urls.json");
+var inDev = builder.Environment.IsDevelopment();
+
+builder.Configuration.AddJsonFile(
+    inDev
+        ? @$"{envPath}/../SkillForge.Data/appsettings.Urls.json"
+        : "/app/appsettings.Urls.json");
+builder.Configuration.AddJsonFile(
+    inDev
+        ? @$"{envPath}/../SkillForge.Data/appsettings.Jwt.json"
+        : "/app/appsettings.Jwt.json");
+
+builder.WebHost.ConfigureKestrel(opts =>
+    opts.ListenAnyIP(7090, lopts => 
+        lopts.UseHttps(inDev 
+            ? "../common.pfx"
+            : "/app/https/common.pfx", "2174583")
+            )
+);
 
 //builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -34,28 +52,48 @@ builder.Services.Configure<ServicesUrls>(
     builder.Configuration.GetSection("ServicesUrls")
     );
 
+var handler = new SocketsHttpHandler
+{
+    SslOptions = new SslClientAuthenticationOptions
+    {
+        RemoteCertificateValidationCallback = (sender, cert, chain, sslPolicyErrors) =>
+        {
+            // тут можно как угодно фильтровать, но для dev — просто true
+            return true;
+        }
+    }
+};
+
 builder.Services.AddTransient(opt =>
 {
     var servicesUrlsOpts = opt.GetRequiredService<IOptions<ServicesUrls>>();
-    var authChannel = GrpcChannel.ForAddress(servicesUrlsOpts.Value.Auth);
+    var authChannel = GrpcChannel.ForAddress(servicesUrlsOpts.Value.Auth, new() {
+        HttpHandler = handler
+    });
     return new AuthService.AuthServiceClient(authChannel);
 });
 builder.Services.AddTransient(opt =>
 {
     var servicesUrlsOpts = opt.GetRequiredService<IOptions<ServicesUrls>>();
-    var productsChannel = GrpcChannel.ForAddress(servicesUrlsOpts.Value.Products);
+    var productsChannel = GrpcChannel.ForAddress(servicesUrlsOpts.Value.Products, new() {
+        HttpHandler = handler
+    });
     return new ProductsService.ProductsServiceClient(productsChannel);
 });
 builder.Services.AddTransient(opt =>
 {
     var servicesUrlsOpts = opt.GetRequiredService<IOptions<ServicesUrls>>();
-    var notifiationChannel = GrpcChannel.ForAddress(servicesUrlsOpts.Value.Notifications);
+    var notifiationChannel = GrpcChannel.ForAddress(servicesUrlsOpts.Value.Notifications, new() {
+        HttpHandler = handler
+    });
     return new NotificationService.NotificationServiceClient(notifiationChannel);
 });
 builder.Services.AddTransient(opt =>
 {
     var servicesUrlsOpts = opt.GetRequiredService<IOptions<ServicesUrls>>();
-    var chatChannel = GrpcChannel.ForAddress(servicesUrlsOpts.Value.Talks);
+    var chatChannel = GrpcChannel.ForAddress(servicesUrlsOpts.Value.Talks, new() {
+        HttpHandler = handler
+    });
     return new ChatService.ChatServiceClient(chatChannel);
 });
 
@@ -83,7 +121,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 Encoding.UTF8.GetBytes(
                     builder.Configuration.GetValue<string>("Jwt:SecretKey")!
                     )
-            )
+                ),
+            RoleClaimType = ClaimTypes.Role
         };
     });
 

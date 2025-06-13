@@ -21,7 +21,12 @@ public class AppDbContext() : DbContext()
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql("User ID=postgres;Password=2174583;Host=database;Port=5432;Database=WebShop;Pooling=true;",
+
+        var connString = Environment.GetEnvironmentVariable("DbConnString") 
+            ?? "User ID=postgres;Password=2174583;Host=database;Port=5432;Database=WebShop;Pooling=true;";
+        
+        // "User ID=postgres;Password=2174583;Host=localhost;Port=5432;Database=WebShop;Pooling=true;"
+        optionsBuilder.UseNpgsql(connString,
             npgsqlOptions => npgsqlOptions.EnableRetryOnFailure());
 
         // Устанавливаем глобальную настройку для DateTime

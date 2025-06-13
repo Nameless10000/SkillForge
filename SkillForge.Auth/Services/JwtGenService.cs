@@ -37,9 +37,7 @@ public class JwtGenService(IConfiguration configuration)
             new Claim(ClaimTypes.NameIdentifier, user.ID.ToString()),
             new Claim(ClaimTypes.Name, user.Username),
             new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.Expiration, DateTime.UtcNow
-                .AddHours(1)
-                .ToString("yyyy-MM-ddTHH:mm:ss")),
+            new Claim(ClaimTypes.Role, user.Role.ToString()),
         ];
     }
 }

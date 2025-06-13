@@ -16,6 +16,65 @@ services:
     networks:
      - backend
 
+  api:
+    build:
+      context: ./
+      dockerfile: ./SkillForge.Api/Dockerfile
+    ports: 
+      - "7090:7090"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    depends_on:
+      - database
+      - auth
+      - prods
+      - talks
+      - notif
+    networks:
+      - backend
+
+  notif:
+    build:
+      context: ./
+      dockerfile: ./SkillForge.Notificator/Dockerfile
+    ports: 
+      - "7029:7029"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    depends_on:
+      - database
+      - auth
+    networks:
+      - backend
+
+  talks:
+    build:
+      context: ./
+      dockerfile: ./SkillForge.Talks/Dockerfile
+    ports: 
+      - "7134:7134"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    depends_on:
+      - database
+      - auth
+    networks:
+      - backend
+
+  prods:
+    build:
+      context: ./
+      dockerfile: ./SkillForge.Products/Dockerfile
+    ports: 
+      - "7211:7211"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    depends_on:
+      - database
+      - auth
+    networks:
+      - backend
+
   auth:
     build: 
       context: ./
@@ -24,7 +83,7 @@ services:
     ports: 
       - "7222:7222"
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_ENVIRONMENT: Production
     depends_on:
       - database
     networks:

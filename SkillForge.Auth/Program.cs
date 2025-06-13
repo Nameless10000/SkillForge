@@ -4,16 +4,22 @@ using SkillForge.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+var inDev = builder.Environment.IsDevelopment();
 builder.WebHost.ConfigureKestrel(opts =>
-    opts.ListenAnyIP(7222, lopts => lopts.UseHttps("/app/https/common.pfx", "2174583"))
+    opts.ListenAnyIP(7222, lopts => 
+        lopts.UseHttps(inDev 
+            ? "../common.pfx"
+            : "/app/https/common.pfx", "2174583")
+            )
 );
 
 var envPath = Environment.CurrentDirectory;
-builder.Configuration.AddJsonFile(@$"{envPath}/appsettings.Jwt.json");
+builder.Configuration.AddJsonFile(
+    inDev
+        ? @$"{envPath}/../SkillForge.Data/appsettings.Jwt.json"
+        : "/app/appsettings.Jwt.json");
 // Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+
 builder.Services.AddGrpc();
 
 builder.Services.AddDbContext<AppDbContext>();
